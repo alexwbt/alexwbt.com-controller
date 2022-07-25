@@ -9,8 +9,8 @@ export default class DockerRouter extends Router {
     }
 
     protected initRouter(router: ExpressRouter): void {
-        router.get("/list", (req, res) => {
-            res.status(200).json(this.dockerManager.listContainers());
+        router.get("/list", async (req, res) => {
+            res.status(200).json(await this.dockerManager.listContainers());
         });
     }
 
