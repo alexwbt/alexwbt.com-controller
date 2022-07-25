@@ -1,9 +1,11 @@
 {
     "cSpell.words": [
-        "dockerode",
-        "keycloak"
+      "dockerode",
+      "keycloak",
+      "Promisable"
     ],
-    "[typescriptreact]": {
+    "[typescript]": {
         "editor.tabSize": 2
     },
+    "editor.detectIndentation": false,
 }

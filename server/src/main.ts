@@ -7,19 +7,19 @@ import { keycloakPassport } from "./util/passport";
 
 (async () => {
 
-    const PORT = getEnvNumber("PORT", 8080);
-    const NODE_ENV = getEnvString("NODE_ENV", "development");
+  const PORT = getEnvNumber("PORT", 8080);
+  const NODE_ENV = getEnvString("NODE_ENV", "development");
 
-    const app = express();
+  const app = express();
 
-    app.use(cors());
+  app.use(cors());
 
-    app.use(keycloakPassport());
+  app.use(keycloakPassport());
 
-    useRouters(app)
+  useRouters(app)
 
-    await new Promise<void>(resolve => app.listen(PORT, resolve));
+  await new Promise<void>(resolve => app.listen(PORT, resolve));
 
-    logger.info(`(${NODE_ENV}) Server running on port ${PORT}`);
+  logger.info(`(${NODE_ENV}) Server running on port ${PORT}`);
 
 })().catch(logger.error);
