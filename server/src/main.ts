@@ -1,3 +1,4 @@
+import * as cors from "cors";
 import * as express from "express";
 import { useRouters } from "./router";
 import { getEnvNumber, getEnvString } from "./util/env";
@@ -10,6 +11,8 @@ import { keycloakPassport } from "./util/passport";
     const NODE_ENV = getEnvString("NODE_ENV", "development");
 
     const app = express();
+
+    app.use(cors());
 
     app.use(keycloakPassport());
 
