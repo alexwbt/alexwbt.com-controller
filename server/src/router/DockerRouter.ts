@@ -1,4 +1,4 @@
-import { RequestHandler, Router as ExpressRouter } from "express";
+import { Router as ExpressRouter } from "express";
 import DockerManager from "../docker/DockerManager";
 import Router from "./Router";
 
