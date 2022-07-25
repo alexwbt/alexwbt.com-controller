@@ -13,14 +13,10 @@ import { keycloakPassport } from "./util/passport";
 
     app.use(keycloakPassport());
 
-    useRouters(app);
+    useRouters(app)
 
     await new Promise<void>(resolve => app.listen(PORT, resolve));
 
-    console.log(`(${NODE_ENV}) Server running on port ${PORT}`);
     logger.info(`(${NODE_ENV}) Server running on port ${PORT}`);
 
-})().catch(err => {
-    console.log(err);
-    logger.error(err);
-});
+})().catch(logger.error);

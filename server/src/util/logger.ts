@@ -11,14 +11,15 @@ const timestampFormat = () => new Date().toLocaleTimeString('en-US', {
 const logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.timestamp({ format: timestampFormat }),
-        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`),
     ),
     transports: [
+        new winston.transports.Console(),
         new (winston.transports as any).DailyRotateFile({
             dirname: 'log',
             filename: '%DATE%.log',
             datePattern: 'DD-MM-YYYY',
-        })
+        }),
     ],
 });
 
