@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const useAsyncData = <T>(
   initialData: T | (() => T),
@@ -14,8 +14,12 @@ const useAsyncData = <T>(
     }
   }, [dataSource]);
 
+  const called = useRef(false);
   useEffect(() => {
-    getData();
+    if (!called.current) {
+      called.current = true;
+      getData();
+    }
   }, [getData]);
 
   return [data, getData] as const;

@@ -24,7 +24,7 @@ const getAxiosPromise = () =>
   });
 
 export const getAxios = async () => {
-  await refresh();
+  await refresh().catch(() => { });
   return axiosInstance || await getAxiosPromise();
 };
 
