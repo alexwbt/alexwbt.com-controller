@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import * as path from "path";
 
 export const ENV_KEYS = [
   "ENV_FILE",
@@ -38,7 +39,7 @@ export const getEnvStringRequired = (key: EnvKey): string => {
   return value;
 };
 
-const envFile = `${__dirname}/../../env/${getEnvString("ENV_FILE")}.env`;
+const envFile = path.join(`${__dirname}/../../env/${getEnvString("ENV_FILE")}.env`);
 console.log(`Loading env file from "${envFile}"`);
 dotenv.config({ path: envFile });
 

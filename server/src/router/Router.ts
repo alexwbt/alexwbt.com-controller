@@ -1,4 +1,5 @@
 import { Application, RequestHandler, Router as ExpressRouter } from "express";
+import * as pathUtil from "path";
 import { Logger } from "../type/logger";
 import { MapRouterReturnType, RouterHandler } from "../type/router";
 
@@ -31,7 +32,7 @@ export default abstract class Router {
         const result = await handler(req, res);
 
         if (result.success == false) {
-          this.logger.error(`[${this.basePath}${path}] ${result.error}`);
+          this.logError(path, `${result.error.status} ${result.error.message}`);
           return res.status(result.error.status).json({
             message: result.error.message
           });
@@ -40,9 +41,13 @@ export default abstract class Router {
         return res.status(200).json(result.data);
 
       } catch (error) {
-        this.logger.error(`[${this.basePath}${path}] ${error}`);
+        this.logError(path, error);
       }
     };
+  }
+
+  private logError(path: string, message: string) {
+    this.logger.error(`[${pathUtil.join(this.basePath, path)}] ${message}`);
   }
 
 }
