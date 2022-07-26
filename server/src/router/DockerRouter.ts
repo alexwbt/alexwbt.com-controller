@@ -1,5 +1,5 @@
-import { Router as ExpressRouter } from "express";
-import DockerManager from "../docker/DockerManager";
+import { Request } from "express";
+import DockerManager, { Command } from "../docker/DockerManager";
 import { ContainerInfo } from "../type/docker";
 import { Logger } from "../type/logger";
 import { MapRouterReturnType, RouterHandlerReturnType } from "../type/router";
@@ -14,10 +14,11 @@ export default class DockerRouter extends Router {
     super(logger);
   }
 
-  protected mapRouter(router: ExpressRouter): MapRouterReturnType {
+  protected mapRouter(): MapRouterReturnType {
     return [
       ["/services", "get", this.services],
-      ["/list", "get", this.list]
+      ["/list", "get", this.list],
+      ["/{command}/{service}", "get", this.run]
     ];
   }
 
@@ -32,6 +33,26 @@ export default class DockerRouter extends Router {
     return {
       success: true,
       data: await this.dockerManager.listContainers()
+    };
+  }
+
+  public async run(req: Request): Promise<RouterHandlerReturnType<number>> {
+    switch (req.params["command"]) {
+      case "build": case "run":
+      case "stop": case "restart": break;
+      default: return {
+        success: false,
+        error: {
+          status: 400,
+          message: "invalid command"
+        }
+      };
+    }
+
+    return {
+      success: true,
+      data: await this.dockerManager.runScript(
+        req.params["command"], [req.params["name"]])
     };
   }
 

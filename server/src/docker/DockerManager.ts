@@ -2,7 +2,7 @@ import * as Dockerode from "dockerode";
 import { ContainerInfo } from "../type/docker";
 import * as shelljs from "shelljs";
 
-type Command = "build" | "run" | "stop" | "restart" | "list";
+export type Command = "build" | "run" | "stop" | "restart" | "list";
 
 export default class DockerManager {
 
@@ -28,17 +28,23 @@ export default class DockerManager {
   }
 
   public runScript(command: Command, names: string[]) {
-    return new Promise<number>(res => {
+    return new Promise<number>((res, rej) => {
       const services = names.filter(
         n => this.availableService.includes(n)
       ).join(' ');
 
       if (!services)
-        res(1);
+        rej(1);
 
       shelljs.exec(
         `cd ${this.eScriptDir} bash e ${command} ${services}`,
-        res);
+        code => {
+          if (code === 0)
+            res(0)
+          else
+            rej(code);
+        }
+      );
     });
   }
 

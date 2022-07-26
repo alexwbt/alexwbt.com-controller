@@ -9,12 +9,12 @@ export default abstract class Router {
 
   private basePath: string = "";
 
-  protected abstract mapRouter(router: ExpressRouter): MapRouterReturnType;
+  protected abstract mapRouter(): MapRouterReturnType;
 
   constructor(private logger: Logger) {
     this.router = ExpressRouter();
 
-    const map = this.mapRouter(this.router);
+    const map = this.mapRouter();
     for (const [path, method, handler] of map) {
       this.router[method](path, this.wrapHandler(path, handler.bind(this)));
     }
@@ -42,6 +42,9 @@ export default abstract class Router {
 
       } catch (error) {
         this.logError(path, error);
+        return res.status(500).json({
+          message: "unknown error"
+        });
       }
     };
   }
