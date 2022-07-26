@@ -33,16 +33,16 @@ export default class DockerManager {
         n => this.availableService.includes(n)
       ).join(' ');
 
-      if (!services)
+      if (!services) {
         rej(1);
+        return;
+      }
 
       shelljs.exec(
         `cd ${this.eScriptDir} bash e ${command} ${services}`,
         code => {
-          if (code === 0)
-            res(0)
-          else
-            rej(code);
+          if (code === 0) res(0);
+          else rej(code);
         }
       );
     });
