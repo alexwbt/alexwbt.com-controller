@@ -11,6 +11,9 @@ export const ENV_KEYS = [
 
   "KEYCLOAK_URL",
   "KEYCLOAK_REALM",
+
+  "E_SCRIPT_DIR",
+  "COMPOSE_DIR_NAME",
 ] as const;
 
 type EnvKeys = typeof ENV_KEYS;

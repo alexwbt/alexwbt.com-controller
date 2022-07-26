@@ -16,8 +16,16 @@ export default class DockerRouter extends Router {
 
   protected mapRouter(router: ExpressRouter): MapRouterReturnType {
     return [
+      ["/services", "get", this.services],
       ["/list", "get", this.list]
     ];
+  }
+
+  public async services(): Promise<RouterHandlerReturnType<string[]>> {
+    return {
+      success: true,
+      data: this.dockerManager.getAvailableServices()
+    };
   }
 
   public async list(): Promise<RouterHandlerReturnType<ContainerInfo[]>> {
