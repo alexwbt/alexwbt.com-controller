@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import { useDockerController } from "../lib/hook/controller/docker";
 import ContainerList from "./Container";
 
@@ -5,9 +6,9 @@ const App = () => {
   const dockerController = useDockerController();
 
   return (
-    <div>
+    <Container disableGutters>
       <ContainerList containers={dockerController.containers} />
-    </div>
+    </Container>
   );
 };
 
