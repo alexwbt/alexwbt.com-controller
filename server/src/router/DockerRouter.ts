@@ -1,5 +1,6 @@
 import { Router as ExpressRouter } from "express";
 import DockerManager from "../docker/DockerManager";
+import { ContainerInfo } from "../type/docker";
 import { Logger } from "../type/logger";
 import { MapRouterReturnType, RouterHandlerReturnType } from "../type/router";
 import Router from "./Router";
@@ -19,26 +20,10 @@ export default class DockerRouter extends Router {
     ];
   }
 
-  public async list(): Promise<RouterHandlerReturnType<{
-    name: string;
-    image: string;
-    publicPorts: number[];
-  }[]>> {
-    const containers = await this.dockerManager.listContainers();
-
+  public async list(): Promise<RouterHandlerReturnType<ContainerInfo[]>> {
     return {
       success: true,
-      data: containers.map(info => ({
-        name: info.Names[0] || info.Image,
-        image: info.Image,
-        publicPorts: Array.from(
-          new Set(
-            info.Ports
-              .map(p => p.PublicPort)
-              .filter(p => !isNaN(p))
-          )
-        )
-      }))
+      data: await this.dockerManager.listContainers()
     };
   }
 
