@@ -31,9 +31,13 @@ export default class DockerRouter extends Router {
       data: containers.map(info => ({
         name: info.Names[0] || info.Image,
         image: info.Image,
-        publicPorts: info.Ports
-          .map(p => p.PublicPort)
-          .filter(p => !isNaN(p))
+        publicPorts: Array.from(
+          new Set(
+            info.Ports
+              .map(p => p.PublicPort)
+              .filter(p => !isNaN(p))
+          )
+        )
       }))
     };
   }

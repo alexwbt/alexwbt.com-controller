@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { addTokenListener, getToken, getTokenPayload, removeTokenListener } from '../keycloak';
+import { addTokenListener, getToken, getTokenPayload, removeTokenListener } from '../util/keycloak';
 import useForceUpdate from './useForceUpdate';
 
 const useKeycloakToken = () => {
@@ -10,10 +10,10 @@ const useKeycloakToken = () => {
         return () => removeTokenListener(forceUpdate);
     }, [forceUpdate]);
 
-    return [
-        getToken(),
-        getTokenPayload()
-    ] as const;
+    return {
+        token: getToken(),
+        tokenPayload: getTokenPayload(),
+    } as const;
 };
 
 export default useKeycloakToken;

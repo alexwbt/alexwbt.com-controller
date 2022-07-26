@@ -20,14 +20,30 @@ keycloak.init({
 let token: string = "";
 let tokenPayload: TokenPayload | null = null;
 
-const listeners: ((token: string) => void)[] = [];
+type TokenListener = (data: {
+    token: string;
+    tokenPayload: TokenPayload | null
+}) => void;
+
+const listeners: TokenListener[] = [];
 
 const triggerListeners = () => {
     if (keycloak.token === token)
         return;
+
     token = keycloak.token || "";
-    tokenPayload = jwt_decode<TokenPayload>(token);
-    listeners.forEach(listener => listener(token));
+
+    try {
+        tokenPayload = jwt_decode<TokenPayload>(token);
+    } catch (error) {
+        console.error("Failed to decode jwt.");
+        console.error(error);
+        tokenPayload = null;
+    }
+
+    listeners.forEach(listener => listener({
+        token, tokenPayload
+    }));
 };
 
 keycloak.onReady = triggerListeners;
@@ -38,11 +54,11 @@ keycloak.onAuthRefreshError = triggerListeners;
 keycloak.onAuthLogout = triggerListeners;
 keycloak.onTokenExpired = triggerListeners;
 
-export const addTokenListener = (callback: (token: string) => void) => {
+export const addTokenListener = (callback: TokenListener) => {
     listeners.push(callback);
 };
 
-export const removeTokenListener = (callback: (token: string) => void) => {
+export const removeTokenListener = (callback: TokenListener) => {
     listeners.splice(listeners.indexOf(callback), 1);
 };
 

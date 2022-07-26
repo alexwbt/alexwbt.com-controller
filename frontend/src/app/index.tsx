@@ -1,22 +1,15 @@
-import { useEffect } from "react";
-import { getAxios } from "../util/axios";
-import useKeycloakToken from "../util/hook/useKeycloakToken";
+import { useDockerController } from "../lib/hook/controller/docker";
 
 const App = () => {
-  const [token, tokenPayload] = useKeycloakToken();
-
-  useEffect(() => {
-    (async () => {
-      const axios = await getAxios();
-      const result = await axios.get('/docker/list');
-      console.log(result)
-    })();
-  }, [token]);
+  const dockerController = useDockerController();
 
   return (
     <div>
-      <div>{token}</div>
-      <textarea value={JSON.stringify(tokenPayload, null, 4)} onChange={() => {}}></textarea>
+      <div>{ }</div>
+      <textarea
+        value={JSON.stringify(dockerController.containers, null, 4)}
+        onChange={() => { }}
+      ></textarea>
     </div>
   );
 };
