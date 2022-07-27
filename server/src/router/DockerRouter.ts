@@ -18,7 +18,7 @@ export default class DockerRouter extends Router {
     return [
       ["/services", "get", this.services],
       ["/list", "get", this.list],
-      ["/{command}/{service}", "get", this.run]
+      ["/:command/:service", "get", this.run]
     ];
   }
 
@@ -37,7 +37,9 @@ export default class DockerRouter extends Router {
   }
 
   public async run(req: Request): Promise<RouterHandlerReturnType<number>> {
-    switch (req.params["command"]) {
+    const { command, service } = req.params;
+
+    switch (command) {
       case "build": case "run":
       case "stop": case "restart": break;
       default: return {
@@ -49,10 +51,22 @@ export default class DockerRouter extends Router {
       };
     }
 
+    if (
+      !this.dockerManager
+        .getAvailableServices()
+        .includes(service)
+    ) return {
+      success: false,
+      error: {
+        status: 400,
+        message: "unknown service"
+      }
+    };
+
     return {
       success: true,
-      data: await this.dockerManager.runScript(
-        req.params["command"], [req.params["name"]])
+      data: await this.dockerManager
+        .runScript(command, [service])
     };
   }
 
